@@ -17,14 +17,10 @@ const PaginaRestaurante = () => {
       .then((res) => setCardapio(res))
   }, [id])
 
-  if (!cardapio) {
-    return <h3>Carregando...</h3>
-  }
-
   return (
     <>
       <HeaderSecond />
-      <Banner />
+      <Banner options={cardapio} />
       <div className="container">
         <ProductsList options={cardapio} />
       </div>

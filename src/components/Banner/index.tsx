@@ -1,22 +1,16 @@
 import { Imagem } from './styles'
-import bannetImg from '../../assets/images/banner.png'
-import { useEffect, useState } from 'react'
 import { Restaurante } from '../../Pages/Home'
 
-const Banner = () => {
-  const [cardapio, setCardapio] = useState<Restaurante>()
+export type Props = {
+  options: Restaurante[]
+}
 
-  useEffect(() => {
-    fetch('https://fake-api-tau.vercel.app/api/efood/restaurantes')
-      .then((res) => res.json())
-      .then((res) => setCardapio(res))
-  }, [])
-
+const Banner = ({ options }: Props) => {
   return (
-    <Imagem style={{ backgroundImage: `url(${cardapio?.capa})` }}>
+    <Imagem style={{ backgroundImage: `url(${options.capa})` }}>
       <div className="container">
-        <h3>{cardapio?.tipo}</h3>
-        <h4>{cardapio?.titulo}</h4>
+        <h3>{options.tipo}</h3>
+        <h4>{options.titulo}</h4>
       </div>
     </Imagem>
   )
