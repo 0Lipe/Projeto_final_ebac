@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import Baner from '../../assets/images/Vector.png'
 
 export const HeaderBar = styled.header`
-  background: url(${Baner});
+  width: 100%;
   height: 384px;
   display: flex;
   flex-direction: column;

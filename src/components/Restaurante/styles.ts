@@ -1,11 +1,17 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { breakpoints, cores } from '../../styles'
 
 export const Cards = styled.div`
   display: flex;
   flex-direction: column;
   width: 472px;
   position: relative;
+
+  @media (max-width: ${breakpoints.desktop}) {
+    margin-left: 40px;
+    margin-bottom: 40px;
+  }
+
 
   p {
     font-size: 14px;

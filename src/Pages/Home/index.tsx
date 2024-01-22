@@ -1,6 +1,16 @@
 import Opcoes from '../../components/Opçoes'
 import Header from '../../components/HeaderMain/inde'
 import { useEffect, useState } from 'react'
+import { useGetRestauranteQuery } from '../../services/api'
+
+export type Cardapios = {
+  foto: string
+  preco: number
+  id: number
+  nome: string
+  descricao: string
+  porcao: string
+}
 
 export type Restaurante = {
   id: number
@@ -10,33 +20,23 @@ export type Restaurante = {
   avaliacao: number
   descricao: string
   capa: string
-  cardapio: {
-    foto: string
-    preco: number
-    id: number
-    nome: string
-    descricao: string
-    porcao: string
-  }
+  cardapio: Cardapios[]
 }
 
 const Home = () => {
-  const [cardapio, setCardapio] = useState<Restaurante[]>([])
+  const { data: cardapio } = useGetRestauranteQuery()
 
-  useEffect(() => {
-    fetch('https://fake-api-tau.vercel.app/api/efood/restaurantes')
-      .then((res) => res.json())
-      .then((res) => setCardapio(res))
-  }, [])
-
-  return (
-    <>
-      <Header />
-      <div className="container">
-        <Opcoes pratos={cardapio} />
-      </div>
-    </>
-  )
+  if (cardapio) {
+    return (
+      <>
+        <Header />
+        <div className="container">
+          <Opcoes pratos={cardapio} />
+        </div>
+      </>
+    )
+  }
+  return <h4>Carregando...</h4>
 }
 
 export default Home

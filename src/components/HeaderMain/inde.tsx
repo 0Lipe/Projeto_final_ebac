@@ -1,9 +1,10 @@
 import { HeaderBar, Logo, Titulo } from './styles'
 
 import Logos from '../../assets/images/logo.png'
+import Baner from '../../assets/images/Vector.png'
 
 const Header = () => (
-  <HeaderBar>
+  <HeaderBar style={{ backgroundImage: `url(${Baner})` }}>
     <Logo>
       <img src={Logos} />
     </Logo>

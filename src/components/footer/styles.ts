@@ -9,6 +9,7 @@ export const Rodape = styled.div`
   align-items: center;
   background: #ffebd9;
   margin-top: 120px;
+  width: 100%;
 
   .LogoFooter {
     width: 125px;

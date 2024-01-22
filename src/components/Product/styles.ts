@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { cores } from '../../styles'
+import { breakpoints, cores } from '../../styles'
 
 export const Produto = styled.li`
   width: 320px;
@@ -112,6 +112,11 @@ export const Modal = styled.div`
   align-items: center;
   justify-content: center;
 
+  @media (max-width: ${breakpoints.celular}) {
+    max-width: 100%;
+    display: grid;
+  }
+
   &.visivel {
     display: flex;
   }
@@ -122,6 +127,6 @@ export const Modal = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.73);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 `
