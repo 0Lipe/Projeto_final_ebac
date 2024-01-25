@@ -1,6 +1,22 @@
 import styled from 'styled-components'
 import { cores } from '../../styles'
 
+export const EntregaContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1;
+  color: #ffebd9;
+
+  &.is-open {
+    display: flex;
+  }
+`
+
 export const Overlay = styled.div`
   position: absolute;
   top: 0;
