@@ -52,10 +52,10 @@ const Entrega = () => {
       endereco: '',
       cidade: '',
       cep: '',
-      numero: 0,
+      numero: '',
       nomeNoCartao: '',
       numeroNoCartao: '',
-      cvv: 0,
+      cvv: '',
       mes: '',
       ano: ''
     },
@@ -69,7 +69,7 @@ const Entrega = () => {
       cidade: Yup.string()
         .min(5, 'O cidade precisa ter pelo menos 5 caracteres')
         .required('O campo e obrigatorio'),
-      cep: Yup.number()
+      cep: Yup.string()
         .min(5, 'O cep precisa ter pelo menos 5 caracteres')
         .required('O campo e obrigatorio'),
       numero: Yup.number()
@@ -78,7 +78,7 @@ const Entrega = () => {
       nomeNoCartao: Yup.string()
         .min(5, 'O nome precisa ter pelo menos 5 caracteres')
         .required('O campo e obrigatorio'),
-      numeroNoCartao: Yup.number()
+      numeroNoCartao: Yup.string()
         .min(5, 'O Numero precisa ter pelo menos 5 numeros')
         .required('O campo e obrigatorio'),
       cvv: Yup.number()
@@ -88,7 +88,7 @@ const Entrega = () => {
         .min(2, 'O Mes precisa ter pelo menos 2 caracteres')
         .required('O campo e obrigatorio'),
       ano: Yup.number()
-        .min(2, 'O ano precisa ter pelo menos 2 caracteres')
+        .min(4, 'O ano precisa ter pelo menos 2 caracteres')
         .required('O campo e obrigatorio')
     }),
     onSubmit: (values) => {
@@ -99,7 +99,7 @@ const Entrega = () => {
             description: values.endereco,
             city: values.cidade,
             zipCode: values.cep,
-            number: 12,
+            number: Number(values.numero),
             complement: 'Case'
           }
         },
@@ -107,19 +107,17 @@ const Entrega = () => {
           card: {
             name: values.nomeNoCartao,
             number: values.numeroNoCartao,
-            code: 123,
+            code: Number(values.cvv),
             expires: {
-              month: 12,
-              year: 1234
+              month: Number(values.mes),
+              year: Number(values.ano)
             }
           }
         },
-        product: [
-          {
-            id: 1,
-            price: 10
-          }
-        ]
+        product: items.map((item) => ({
+          id: item.id,
+          price: item.preco as number
+        }))
       })
     }
   })
@@ -235,8 +233,8 @@ const Entrega = () => {
       {etapaAtual === 2 && (
         <EntregaContainer>
           <Sidebar>
-            <h3>Pagamento - Valor a pagar R$ 190,90</h3>
-            <Formulario onSubmit={form.handleSubmit}>
+            <h3>Pagamento - Valor a pagar {formataPreco(getTotalPrice())}</h3>
+            <Formulario>
               <div>
                 <label htmlFor="nomeNoCartao">Nome no cartão</label>
                 <input
@@ -298,21 +296,21 @@ const Entrega = () => {
                   </div>
                 </div>
               </div>
+              <Btn>
+                <button
+                  type="submit"
+                  onClick={() => {
+                    form.handleSubmit()
+                    setEtapaAtual(3)
+                  }}
+                >
+                  Finalizar pagamento
+                </button>
+                <button onClick={() => setEtapaAtual(1)}>
+                  Voltar para a edição de endereço
+                </button>
+              </Btn>
             </Formulario>
-            <Btn>
-              <button
-                type="submit"
-                onClick={() => {
-                  console.log(form.handleSubmit())
-                  setEtapaAtual(3)
-                }}
-              >
-                Finalizar pagamento
-              </button>
-              <button onClick={() => setEtapaAtual(1)}>
-                Voltar para a edição de endereço
-              </button>
-            </Btn>
           </Sidebar>
         </EntregaContainer>
       )}
@@ -320,30 +318,25 @@ const Entrega = () => {
         <EntregaContainer>
           <Sidebar>
             <Finalizado>
-              <h3>Pedido realizado - {data && data.orderId}</h3>
-              {data && (
-                <>
-                  <p>
-                    Estamos felizes em informar que seu pedido já está em
-                    processo de preparação e, em breve, será entregue no
-                    endereço fornecido.
-                  </p>
-                  <p>
-                    Gostaríamos de ressaltar que nossos entregadores não estão
-                    autorizados a realizar cobranças extras.{' '}
-                  </p>
-                  <p>
-                    Lembre-se da importância de higienizar as mãos após o
-                    recebimento do pedido, garantindo assim sua segurança e
-                    bem-estar durante a refeição.
-                  </p>
-                  <p>
-                    Esperamos que desfrute de uma deliciosa e agradável
-                    experiência gastronômica. Bom apetite!
-                  </p>
-                  <button>Concluir</button>
-                </>
-              )}
+              <h3>Pedido realizado -{data.orderId}</h3>
+              <p>
+                Estamos felizes em informar que seu pedido já está em processo
+                de preparação e, em breve, será entregue no endereço fornecido.
+              </p>
+              <p>
+                Gostaríamos de ressaltar que nossos entregadores não estão
+                autorizados a realizar cobranças extras.{' '}
+              </p>
+              <p>
+                Lembre-se da importância de higienizar as mãos após o
+                recebimento do pedido, garantindo assim sua segurança e
+                bem-estar durante a refeição.
+              </p>
+              <p>
+                Esperamos que desfrute de uma deliciosa e agradável experiência
+                gastronômica. Bom apetite!
+              </p>
+              <button>Concluir</button>
             </Finalizado>
           </Sidebar>
         </EntregaContainer>

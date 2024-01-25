@@ -15,7 +15,7 @@ type PurchasePayload = {
       description: string
       city: string
       zipCode: string
-      number: 12
+      number: number
       complement: string
     }
   }
@@ -23,10 +23,10 @@ type PurchasePayload = {
     card: {
       name: string
       number: string
-      code: 123
+      code: number
       expires: {
-        month: 12
-        year: 1234
+        month: number
+        year: number
       }
     }
   }
