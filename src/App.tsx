@@ -15,7 +15,6 @@ function App() {
         <GlobalCss />
         <Rotas />
         <Footer />
-        <Cart />
         <Entrega />
       </BrowserRouter>
     </Provider>

@@ -1,19 +1,50 @@
 import {
+  Botao,
   Btn,
+  CardCarrinho,
   CartContainer,
   Finalizado,
   Formulario,
   Overlay,
   Sidebar
 } from '../Cart/styles'
+import Lixeira from '../../assets/images/lixeira-de-reciclagem 1.png'
 import { useFormik } from 'formik'
 import { EntregaContainer } from './styles'
 import * as Yup from 'yup'
 import { usePurchaseMutation } from '../../services/api'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootReducer } from '../../store'
+import { remove, close } from '../../store/reducers/cart'
+import { formataPreco } from '../ProductList'
 
 const Entrega = () => {
   const [purchese, { isLoading, isError, data, isSuccess }] =
     usePurchaseMutation()
+
+  const [etapaAtual, setEtapaAtual] = useState(0)
+
+  const avancarEtapa = () => {
+    setEtapaAtual(etapaAtual + 1)
+  }
+  const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
+
+  const dispatch = useDispatch()
+
+  const closeCart = () => {
+    dispatch(close())
+  }
+
+  const getTotalPrice = () => {
+    return items.reduce((acumulador, valorAtual) => {
+      return (acumulador += valorAtual.preco)
+    }, 0)
+  }
+
+  const removeItem = (id: number) => {
+    dispatch(remove(id))
+  }
 
   const form = useFormik({
     initialValues: {
@@ -94,102 +125,115 @@ const Entrega = () => {
   })
   return (
     <>
-      <EntregaContainer>
-        <h3>Entrega</h3>
-        <Overlay />
-        <Sidebar>
-          <Formulario onSubmit={form.handleSubmit}>
-            <div>
-              <label htmlFor="fullname">Quem irá receber</label>
-              <input
-                id="fullname"
-                type="text"
-                name="fullname"
-                value={form.values.fullname}
-                onChange={form.handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="endereco">Endereço</label>
-              <input
-                id="endereco"
-                type="text"
-                name="endereco"
-                value={form.values.endereco}
-                onChange={form.handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="cidade">Cidade</label>
-              <input
-                id="cidade"
-                type="text"
-                name="cidade"
-                value={form.values.cidade}
-                onChange={form.handleChange}
-              />
-            </div>
-            <div className="div-cep-numero">
-              <div>
-                <label htmlFor="cep">CEP</label>
-                <input
-                  id="cep"
-                  type="text"
-                  inputMode="none"
-                  name="cep"
-                  value={form.values.cep}
-                  onChange={form.handleChange}
-                />
-              </div>
-              <div>
-                <label htmlFor="numero">Numero</label>
-                <input
-                  id="numero"
-                  type="number"
-                  name="numero"
-                  value={form.values.numero}
-                  onChange={form.handleChange}
-                />
-              </div>
-            </div>
-            <label>Complemento(opcional)</label>
-            <input type="text" />
-          </Formulario>
-          <Btn>
-            <button type="submit">Continuar com o pagamento</button>
-            <button>Voltar para o carrinho</button>
-          </Btn>
-        </Sidebar>
-      </EntregaContainer>
-
-      {isSuccess ? (
-        <CartContainer>
+      {etapaAtual === 0 && (
+        <CartContainer className={isOpen ? 'is-open' : ''}>
+          <Overlay onClick={closeCart} />
           <Sidebar>
-            <Finalizado>
-              <h3>Pedido realizado - {data.orderId}</h3>
-              <p>
-                Estamos felizes em informar que seu pedido já está em processo
-                de preparação e, em breve, será entregue no endereço fornecido.
-              </p>
-              <p>
-                Gostaríamos de ressaltar que nossos entregadores não estão
-                autorizados a realizar cobranças extras.{' '}
-              </p>
-              <p>
-                Lembre-se da importância de higienizar as mãos após o
-                recebimento do pedido, garantindo assim sua segurança e
-                bem-estar durante a refeição.
-              </p>
-              <p>
-                Esperamos que desfrute de uma deliciosa e agradável experiência
-                gastronômica. Bom apetite!
-              </p>
-              <button>Concluir</button>
-            </Finalizado>
+            <ul>
+              {items.map((item) => (
+                <li key={item.id}>
+                  <CardCarrinho>
+                    <div className="div-img">
+                      <img src={item.foto} />
+                    </div>
+                    <div className="div-content">
+                      <h3>{item.nome}</h3>
+                      <h4>R${formataPreco(item.preco)}</h4>
+                    </div>
+                    <div className="div-lixeira">
+                      <img
+                        onClick={() => removeItem(item.id)}
+                        className="Lixeira"
+                        src={Lixeira}
+                      />
+                    </div>
+                  </CardCarrinho>
+                </li>
+              ))}
+            </ul>
+            <div className="div-total">
+              <p>Valor total</p>
+              <p>R$ {formataPreco(getTotalPrice())}</p>
+            </div>
+            <Botao onClick={() => setEtapaAtual(1)}>
+              Continuar com a entrega
+            </Botao>
           </Sidebar>
         </CartContainer>
-      ) : (
-        <CartContainer>
+      )}
+      {etapaAtual === 1 && (
+        <EntregaContainer>
+          <h3>Entrega</h3>
+          <Overlay />
+          <Sidebar>
+            <Formulario onSubmit={form.handleSubmit}>
+              <div>
+                <label htmlFor="fullname">Quem irá receber</label>
+                <input
+                  id="fullname"
+                  type="text"
+                  name="fullname"
+                  value={form.values.fullname}
+                  onChange={form.handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="endereco">Endereço</label>
+                <input
+                  id="endereco"
+                  type="text"
+                  name="endereco"
+                  value={form.values.endereco}
+                  onChange={form.handleChange}
+                />
+              </div>
+              <div>
+                <label htmlFor="cidade">Cidade</label>
+                <input
+                  id="cidade"
+                  type="text"
+                  name="cidade"
+                  value={form.values.cidade}
+                  onChange={form.handleChange}
+                />
+              </div>
+              <div className="div-cep-numero">
+                <div>
+                  <label htmlFor="cep">CEP</label>
+                  <input
+                    id="cep"
+                    type="text"
+                    inputMode="none"
+                    name="cep"
+                    value={form.values.cep}
+                    onChange={form.handleChange}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="numero">Numero</label>
+                  <input
+                    id="numero"
+                    type="number"
+                    name="numero"
+                    value={form.values.numero}
+                    onChange={form.handleChange}
+                  />
+                </div>
+              </div>
+              <label>Complemento(opcional)</label>
+              <input type="text" />
+            </Formulario>
+            <Btn>
+              <button type="submit" onClick={() => setEtapaAtual(2)}>
+                Continuar com o pagamento
+              </button>
+              <button>Voltar para o carrinho</button>
+            </Btn>
+          </Sidebar>
+        </EntregaContainer>
+      )}
+      {etapaAtual === 2 && (
+        <EntregaContainer>
           <Sidebar>
             <h3>Pagamento - Valor a pagar R$ 190,90</h3>
             <Formulario onSubmit={form.handleSubmit}>
@@ -256,13 +300,53 @@ const Entrega = () => {
               </div>
             </Formulario>
             <Btn>
-              <button type="submit" onClick={() => form.handleSubmit()}>
+              <button
+                type="submit"
+                onClick={() => {
+                  console.log(form.handleSubmit())
+                  setEtapaAtual(3)
+                }}
+              >
                 Finalizar pagamento
               </button>
-              <button>Voltar para a edição de endereço</button>
+              <button onClick={() => setEtapaAtual(1)}>
+                Voltar para a edição de endereço
+              </button>
             </Btn>
           </Sidebar>
-        </CartContainer>
+        </EntregaContainer>
+      )}
+      {etapaAtual === 3 && (
+        <EntregaContainer>
+          <Sidebar>
+            <Finalizado>
+              <h3>Pedido realizado - {data && data.orderId}</h3>
+              {data && (
+                <>
+                  <p>
+                    Estamos felizes em informar que seu pedido já está em
+                    processo de preparação e, em breve, será entregue no
+                    endereço fornecido.
+                  </p>
+                  <p>
+                    Gostaríamos de ressaltar que nossos entregadores não estão
+                    autorizados a realizar cobranças extras.{' '}
+                  </p>
+                  <p>
+                    Lembre-se da importância de higienizar as mãos após o
+                    recebimento do pedido, garantindo assim sua segurança e
+                    bem-estar durante a refeição.
+                  </p>
+                  <p>
+                    Esperamos que desfrute de uma deliciosa e agradável
+                    experiência gastronômica. Bom apetite!
+                  </p>
+                  <button>Concluir</button>
+                </>
+              )}
+            </Finalizado>
+          </Sidebar>
+        </EntregaContainer>
       )}
     </>
   )
