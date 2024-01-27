@@ -1,14 +1,4 @@
-import {
-  Botao,
-  Btn,
-  CardCarrinho,
-  CartContainer,
-  Finalizado,
-  Formulario,
-  Overlay,
-  Sidebar,
-  EntregaContainer
-} from './styles'
+import * as S from './styles'
 import Lixeira from '../../assets/images/lixeira-de-reciclagem 1.png'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -16,8 +6,9 @@ import { usePurchaseMutation } from '../../services/api'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootReducer } from '../../store'
-import { remove, close } from '../../store/reducers/cart'
+import { remove, close, open } from '../../store/reducers/cart'
 import { formataPreco } from '../ProductList'
+import { Link } from 'react-router-dom'
 
 const Cart = () => {
   const [purchese, { isLoading, isError, data, isSuccess }] =
@@ -48,11 +39,12 @@ const Cart = () => {
 
   const form = useFormik({
     initialValues: {
-      fullname: '',
+      receiver: '',
       endereco: '',
       cidade: '',
       cep: '',
       numero: '',
+      complemento: '',
       nomeNoCartao: '',
       numeroNoCartao: '',
       cvv: '',
@@ -60,47 +52,57 @@ const Cart = () => {
       ano: ''
     },
     validationSchema: Yup.object({
-      fullname: Yup.string()
-        .min(5, 'O nome precisa ter pelo menos 5 caracteres')
-        .required('O campo e obrigatorio'),
+      receiver: Yup.string()
+        .min(4, 'O nome precisa ter pelo menos 4 caracteres')
+        .required('O campo é obrigatório'),
       endereco: Yup.string()
         .min(5, 'O endereço precisa ter pelo menos 5 caracteres')
-        .required('O campo e obrigatorio'),
+        .required('O campo é obrigatório'),
       cidade: Yup.string()
-        .min(5, 'O cidade precisa ter pelo menos 5 caracteres')
-        .required('O campo e obrigatorio'),
+        .min(5, 'A cidade precisa ter pelo menos 5 caracteres')
+        .required('O campo é obrigatório'),
       cep: Yup.string()
-        .min(5, 'O cep precisa ter pelo menos 5 caracteres')
-        .required('O campo e obrigatorio'),
+        .min(6, 'O CEP precisa ter pelo menos 14 caracteres')
+        .max(99999999, 'O CEP pode ter no máximo 15 caracteres')
+        .required('O campo é obrigatório'),
       numero: Yup.number()
-        .min(1, 'O Numero precisa ter pelo menos 1 caracteres')
-        .required('O campo e obrigatorio'),
+        .min(1, 'O número precisa ter pelo menos 1 caracteres')
+        .max(99)
+        .required('O campo é obrigatório'),
+      complemento: Yup.string(),
       nomeNoCartao: Yup.string()
         .min(5, 'O nome precisa ter pelo menos 5 caracteres')
-        .required('O campo e obrigatorio'),
+        .required('O campo é obrigatório'),
       numeroNoCartao: Yup.string()
-        .min(5, 'O Numero precisa ter pelo menos 5 numeros')
-        .required('O campo e obrigatorio'),
+        .min(5, 'O número precisa ter pelo menos 5 caracteres')
+        .required('O campo é obrigatório'),
       cvv: Yup.number()
         .min(3, 'O CVV precisa ter pelo menos 3 caracteres')
-        .required('O campo e obrigatorio'),
+        .max(999)
+        .required('O campo é obrigatório'),
       mes: Yup.number()
-        .min(2, 'O Mes precisa ter pelo menos 2 caracteres')
-        .required('O campo e obrigatorio'),
+        .min(1, 'O Mês precisa ter pelo menos 2 caracteres')
+        .max(12)
+        .required('O campo é obrigatório'),
       ano: Yup.number()
-        .min(4, 'O ano precisa ter pelo menos 2 caracteres')
-        .required('O campo e obrigatorio')
+        .min(1, 'O ano precisa ter pelo menos 4 caracteres')
+        .max(9999)
+        .required('O campo é obrigatório')
     }),
     onSubmit: (values) => {
       purchese({
+        product: items.map((item) => ({
+          id: item.id,
+          price: item.preco
+        })),
         delivery: {
-          receiver: values.fullname,
+          receiver: values.receiver,
           address: {
             description: values.endereco,
             city: values.cidade,
             zipCode: values.cep,
             number: Number(values.numero),
-            complement: 'Case'
+            complement: values.complemento
           }
         },
         payment: {
@@ -113,24 +115,29 @@ const Cart = () => {
               year: Number(values.ano)
             }
           }
-        },
-        product: items.map((item) => ({
-          id: item.id,
-          price: item.preco as number
-        }))
+        }
       })
     }
   })
+
+  const checkInputHasError = (fieldName: string) => {
+    const isTouched = fieldName in form.touched
+    const isInvalid = fieldName in form.errors
+    const hasError = isTouched && isInvalid
+
+    return hasError
+  }
+
   return (
     <>
       {etapaAtual === 0 && (
-        <CartContainer className={isOpen ? 'is-open' : ''}>
-          <Overlay onClick={closeCart} />
-          <Sidebar>
+        <S.CartContainer className={isOpen ? 'is-open' : ''}>
+          <S.Overlay onClick={closeCart} />
+          <S.Sidebar>
             <ul>
               {items.map((item) => (
                 <li key={item.id}>
-                  <CardCarrinho>
+                  <S.CardCarrinho>
                     <div className="div-img">
                       <img src={item.foto} />
                     </div>
@@ -145,7 +152,7 @@ const Cart = () => {
                         src={Lixeira}
                       />
                     </div>
-                  </CardCarrinho>
+                  </S.CardCarrinho>
                 </li>
               ))}
             </ul>
@@ -153,37 +160,40 @@ const Cart = () => {
               <p>Valor total</p>
               <p>R$ {formataPreco(getTotalPrice())}</p>
             </div>
-            <Botao onClick={() => setEtapaAtual(1)}>
+            <S.Botao onClick={() => setEtapaAtual(1)}>
               Continuar com a entrega
-            </Botao>
-          </Sidebar>
-        </CartContainer>
+            </S.Botao>
+          </S.Sidebar>
+        </S.CartContainer>
       )}
-      <Formulario></Formulario>
       {etapaAtual === 1 && (
-        <EntregaContainer>
+        <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
           <h3>Entrega</h3>
-          <Overlay />
-          <Sidebar>
-            <Formulario onSubmit={form.handleSubmit}>
+          <S.Overlay />
+          <S.Sidebar>
+            <S.Formulario onSubmit={form.handleSubmit}>
               <div>
-                <label htmlFor="fullname">Quem irá receber</label>
+                <label htmlFor="receiver">Quem irá receber</label>
                 <input
-                  id="fullname"
+                  id="receiver"
                   type="text"
-                  name="fullname"
-                  value={form.values.fullname}
+                  name="receiver"
+                  value={form.values.receiver}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  className={checkInputHasError('receiver') ? 'error' : ''}
                 />
               </div>
               <div>
                 <label htmlFor="endereco">Endereço</label>
                 <input
-                  id="endereco"
                   type="text"
+                  id="endereco"
                   name="endereco"
                   value={form.values.endereco}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  className={checkInputHasError('endereco') ? 'error' : ''}
                 />
               </div>
               <div>
@@ -194,6 +204,8 @@ const Cart = () => {
                   name="cidade"
                   value={form.values.cidade}
                   onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  className={checkInputHasError('cidade') ? 'error' : ''}
                 />
               </div>
               <div className="div-cep-numero">
@@ -206,36 +218,52 @@ const Cart = () => {
                     name="cep"
                     value={form.values.cep}
                     onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    className={checkInputHasError('cep') ? 'error' : ''}
                   />
                 </div>
                 <div>
                   <label htmlFor="numero">Numero</label>
                   <input
                     id="numero"
-                    type="number"
+                    type="text"
                     name="numero"
                     value={form.values.numero}
                     onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    className={checkInputHasError('numero') ? 'error' : ''}
                   />
                 </div>
               </div>
               <label>Complemento(opcional)</label>
-              <input type="text" />
-            </Formulario>
-            <Btn>
-              <button type="submit" onClick={() => setEtapaAtual(2)}>
+              <input
+                type="text"
+                id="complemento"
+                name="complemento"
+                value={form.values.complemento}
+                onChange={form.handleChange}
+                onBlur={form.handleBlur}
+                className={checkInputHasError('complemento') ? 'error' : ''}
+              />
+            </S.Formulario>
+            <S.Btn>
+              <button
+                onClick={() => {
+                  form.handleBlur, setEtapaAtual(2)
+                }}
+              >
                 Continuar com o pagamento
               </button>
-              <button>Voltar para o carrinho</button>
-            </Btn>
-          </Sidebar>
-        </EntregaContainer>
+              <button type="button">Voltar para o carrinho</button>
+            </S.Btn>
+          </S.Sidebar>
+        </S.EntregaContainer>
       )}
       {etapaAtual === 2 && (
-        <EntregaContainer>
-          <Sidebar>
+        <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
+          <S.Sidebar>
             <h3>Pagamento - Valor a pagar {formataPreco(getTotalPrice())}</h3>
-            <Formulario onSubmit={form.handleSubmit}>
+            <S.Formulario onSubmit={form.handleSubmit}>
               <div>
                 <label htmlFor="nomeNoCartao">Nome no cartão</label>
                 <input
@@ -245,6 +273,7 @@ const Cart = () => {
                   value={form.values.nomeNoCartao}
                   onChange={form.handleChange}
                   onBlur={form.handleBlur}
+                  className={checkInputHasError('nomeNoCartao') ? 'error' : ''}
                 />
               </div>
               <div>
@@ -253,22 +282,26 @@ const Cart = () => {
                     <label htmlFor="numeroNoCartao">Numero do cartão</label>
                     <input
                       id="numero-no-cartao"
-                      type="number"
+                      type="text"
                       name="numeroNoCartao"
                       value={form.values.numeroNoCartao}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
+                      className={
+                        checkInputHasError('numero-no-cartao') ? 'error' : ''
+                      }
                     />
                   </div>
                   <div className="cvv">
                     <label htmlFor="cvv">CVV</label>
                     <input
                       id="cvv"
-                      type="number"
+                      type="text"
                       name="cvv"
                       value={form.values.cvv}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
+                      className={checkInputHasError('cvv') ? 'error' : ''}
                     />
                   </div>
                 </div>
@@ -282,44 +315,45 @@ const Cart = () => {
                       value={form.values.mes}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
+                      className={checkInputHasError('mes') ? 'error' : ''}
                     />
                   </div>
                   <div className="ano">
                     <label htmlFor="ano">Ano de vencimento</label>
                     <input
-                      type="number"
+                      type="text"
                       id="ano"
                       name="ano"
                       value={form.values.ano}
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
+                      className={checkInputHasError('ano') ? 'error' : ''}
                     />
                   </div>
                 </div>
               </div>
-              <Btn>
+              <S.Btn>
                 <button
-                  type="button"
+                  type="submit"
                   onClick={() => {
-                    form.handleSubmit()
-                    setEtapaAtual(3)
+                    form.handleSubmit
                   }}
                 >
                   Finalizar pagamento
                 </button>
-                <button onClick={() => setEtapaAtual(1)}>
+                <button type="button" onClick={() => setEtapaAtual(1)}>
                   Voltar para a edição de endereço
                 </button>
-              </Btn>
-            </Formulario>
-          </Sidebar>
-        </EntregaContainer>
+              </S.Btn>
+            </S.Formulario>
+          </S.Sidebar>
+        </S.EntregaContainer>
       )}
       {etapaAtual === 3 && (
-        <EntregaContainer>
-          <Sidebar>
-            <Finalizado>
-              <h3>Pedido realizado -{data.OrderId}</h3>
+        <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
+          <S.Sidebar>
+            <S.Finalizado>
+              <h3>Pedido realizado -{data?.orderId}</h3>
               <p>
                 Estamos felizes em informar que seu pedido já está em processo
                 de preparação e, em breve, será entregue no endereço fornecido.
@@ -337,10 +371,18 @@ const Cart = () => {
                 Esperamos que desfrute de uma deliciosa e agradável experiência
                 gastronômica. Bom apetite!
               </p>
-              <button>Concluir</button>
-            </Finalizado>
-          </Sidebar>
-        </EntregaContainer>
+              <S.Links
+                to="/"
+                onClick={() => {
+                  closeCart()
+                  window.location.href = '/'
+                }}
+              >
+                Concluir
+              </S.Links>
+            </S.Finalizado>
+          </S.Sidebar>
+        </S.EntregaContainer>
       )}
     </>
   )

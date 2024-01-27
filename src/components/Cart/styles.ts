@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { cores } from '../../styles'
+import { Link } from 'react-router-dom'
 
 export const EntregaContainer = styled.div`
   position: fixed;
@@ -7,7 +8,7 @@ export const EntregaContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: none;
   justify-content: flex-end;
   z-index: 1;
   color: #ffebd9;
@@ -142,6 +143,10 @@ export const Formulario = styled.form`
     height: 32px;
     background-color: #ffebd9;
     border: none;
+
+    &.error {
+      border: 3px solid red;
+    }
   }
 
   label {
@@ -198,7 +203,6 @@ export const Btn = styled.div`
   button {
     border: 0;
     height: 24px;
-
     background-color: #ffebd9;
     margin-bottom: 8px;
     color: #e66767;
@@ -228,4 +232,19 @@ export const Finalizado = styled.div`
     font-size: 14px;
     width: 344px;
   }
+`
+
+export const Links = styled(Link)`
+  text-decoration: none;
+  display: flex;
+  height: 24px;
+  width: 344px;
+  background-color: #ffebd9;
+  margin-bottom: 8px;
+  color: #e66767;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 14px;
+  justify-content: center;
+  align-items: center;
 `

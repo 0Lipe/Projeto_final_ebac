@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Restaurante } from '../Pages/Home'
-import { string } from 'yup'
 
 type Product = {
   id: number
@@ -16,7 +15,7 @@ type PurchasePayload = {
       city: string
       zipCode: string
       number: number
-      complement: string
+      complement?: string
     }
   }
   payment: {
@@ -32,6 +31,10 @@ type PurchasePayload = {
   }
 }
 
+type PurchaseResponse = {
+  orderId: string
+}
+
 const api = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://fake-api-tau.vercel.app/api/efood/'
@@ -43,7 +46,7 @@ const api = createApi({
     getCardapio: builder.query<Restaurante, string>({
       query: (id) => `restaurantes/${id}`
     }),
-    purchase: builder.mutation<any, PurchasePayload>({
+    purchase: builder.mutation<PurchaseResponse, PurchasePayload>({
       query: (body) => ({
         url: 'checkout',
         method: 'POST',
