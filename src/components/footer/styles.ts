@@ -20,6 +20,7 @@ export const Rodape = styled.div`
   p {
     text-align: center;
     margin-bottom: 40px;
+    font-size: 10px;
   }
 `
 

@@ -37,6 +37,14 @@ export const Prato = styled.div`
   justify-content: space-between;
   padding-top: 8px;
 
+  .Notas {
+    display: flex;
+    h3 {
+      font-size: 18px;
+      margin-right: 3px;
+    }
+  }
+
   h2 {
     font-size: 18px;
     padding-left: 7px;

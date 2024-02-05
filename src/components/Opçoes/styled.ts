@@ -4,7 +4,7 @@ import { breakpoints } from '../../styles'
 export const Menu = styled.ul`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 80px;
+  grid-gap: 48px 80px;
   padding-top: 80px;
 
   @media (max-width: ${breakpoints.desktop}) {

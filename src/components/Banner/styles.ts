@@ -2,12 +2,24 @@ import styled from 'styled-components'
 
 export const Imagem = styled.div`
   width: 100%;
+  position:relative;
   height: 280px;
   display: block;
   background-repeat: no-repeat;
   background-size: cover;
-  filter: brightness(0.7);
   height:280px;
+
+  &::after {
+    position: absolute;
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    content: '';
+    opacity: 0.56;
+  }
+
 
   h3{
   color: #FFF;
@@ -15,7 +27,7 @@ export const Imagem = styled.div`
   font-size: 32px;
   font-style: normal;
   font-weight: 100;
-  line-height: normal;
+  line-height: 37.5px;
   padding-top: 25px;
   }
 
@@ -30,6 +42,8 @@ export const Imagem = styled.div`
   }
 
   .container {
+      position:relative;
+      z-index:1;
       max-width: 1024px;
       width: 100%;
       margin: 0 auto;

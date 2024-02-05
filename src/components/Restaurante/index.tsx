@@ -11,6 +11,12 @@ type Props = {
   nota: number
   id: number
 }
+const getDescricao = (descricao: string) => {
+  if (descricao.length > 250) {
+    return descricao.slice(0, 250) + '...'
+  }
+  return descricao
+}
 
 const Card = ({ titulo, tipo, descricao, image, nota, id }: Props) => {
   return (
@@ -24,11 +30,12 @@ const Card = ({ titulo, tipo, descricao, image, nota, id }: Props) => {
       <Descricao>
         <Prato>
           <h2>{titulo}</h2>
-          <h2>
-            {nota} <img src={estrela} />
-          </h2>
+          <div className="Notas">
+            <h3>{nota}</h3>
+            <img src={estrela} />
+          </div>
         </Prato>
-        <p>{descricao}</p>
+        <p>{getDescricao(descricao)}</p>
         <BotaoDiv>
           <Botoes to={`restaurante/${id}`}>Saiba Mais</Botoes>
         </BotaoDiv>
