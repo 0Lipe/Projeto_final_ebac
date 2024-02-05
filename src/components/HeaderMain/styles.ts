@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Baner from '../../assets/images/Vector.png'
 
 export const HeaderBar = styled.header`
   width: 100%;

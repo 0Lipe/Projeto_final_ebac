@@ -6,19 +6,17 @@ import { usePurchaseMutation } from '../../services/api'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootReducer } from '../../store'
-import { remove, close, open } from '../../store/reducers/cart'
+import { remove, close } from '../../store/reducers/cart'
 import { formataPreco } from '../ProductList'
-import { Link } from 'react-router-dom'
 
 const Cart = () => {
-  const [purchese, { isLoading, isError, data, isSuccess }] =
-    usePurchaseMutation()
+  const [purchese, { data }] = usePurchaseMutation()
 
   const [etapaAtual, setEtapaAtual] = useState(0)
 
-  const avancarEtapa = () => {
-    setEtapaAtual(etapaAtual + 1)
-  }
+  // const avancarEtapa = () => {
+  //   setEtapaAtual(etapaAtual + 1)
+  // }
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
 
   const dispatch = useDispatch()
@@ -91,7 +89,7 @@ const Cart = () => {
     }),
     onSubmit: (values) => {
       purchese({
-        product: items.map((item) => ({
+        products: items.map((item) => ({
           id: item.id,
           price: item.preco
         })),
@@ -249,7 +247,7 @@ const Cart = () => {
             <S.Btn>
               <button
                 onClick={() => {
-                  form.handleBlur, setEtapaAtual(2)
+                  setEtapaAtual(2)
                 }}
               >
                 Continuar com o pagamento
@@ -336,7 +334,7 @@ const Cart = () => {
                 <button
                   type="submit"
                   onClick={() => {
-                    form.handleSubmit
+                    form.handleSubmit(), setEtapaAtual(3)
                   }}
                 >
                   Finalizar pagamento

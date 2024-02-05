@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react'
 import * as S from './styles'
-import { Restaurante } from '../../Pages/Home'
 
 export type Props = {
   to?: string

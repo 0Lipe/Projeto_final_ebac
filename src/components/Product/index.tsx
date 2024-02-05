@@ -1,4 +1,3 @@
-import imagem from '../../assets/images/image 3.png'
 import close from '../../assets/images/close 1.png'
 import { Produto, Modal, Button, ModalContent } from './styles'
 import { useState } from 'react'

@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import Baner from '../../assets/images/Vector.png'
 import { breakpoints } from '../../styles'
 
 export const Header = styled.header`

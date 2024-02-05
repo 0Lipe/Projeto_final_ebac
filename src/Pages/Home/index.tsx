@@ -1,6 +1,5 @@
 import Opcoes from '../../components/Opçoes'
 import Header from '../../components/HeaderMain/inde'
-import { useEffect, useState } from 'react'
 import { useGetRestauranteQuery } from '../../services/api'
 
 export type Cardapios = {

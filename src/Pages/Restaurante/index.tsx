@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+
 import Banner from '../../components/Banner'
 import HeaderSecond from '../../components/Header'
 import ProductsList from '../../components/ProductList'
-import { Restaurante } from '../Home'
+
 import { useGetCardapioQuery } from '../../services/api'
 
 const PaginaRestaurante = () => {
