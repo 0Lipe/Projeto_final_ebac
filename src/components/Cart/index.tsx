@@ -12,11 +12,8 @@ import { formataPreco } from '../ProductList'
 const Cart = () => {
   const [purchese, { data }] = usePurchaseMutation()
 
-  const [etapaAtual, setEtapaAtual] = useState(0)
+  const [etapaAtual, setEtapaAtual] = useState(1)
 
-  // const avancarEtapa = () => {
-  //   setEtapaAtual(etapaAtual + 1)
-  // }
   const { isOpen, items } = useSelector((state: RootReducer) => state.cart)
 
   const dispatch = useDispatch()
@@ -128,7 +125,7 @@ const Cart = () => {
 
   return (
     <>
-      {etapaAtual === 0 && (
+      {etapaAtual === 1 && (
         <S.CartContainer className={isOpen ? 'is-open' : ''}>
           <S.Overlay onClick={closeCart} />
           <S.Sidebar>
@@ -158,13 +155,13 @@ const Cart = () => {
               <p>Valor total</p>
               <p>R$ {formataPreco(getTotalPrice())}</p>
             </div>
-            <S.Botao onClick={() => setEtapaAtual(1)}>
+            <S.Botao onClick={() => setEtapaAtual(2)}>
               Continuar com a entrega
             </S.Botao>
           </S.Sidebar>
         </S.CartContainer>
       )}
-      {etapaAtual === 1 && (
+      {etapaAtual === 2 && (
         <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
           <h3>Entrega</h3>
           <S.Overlay />
@@ -247,17 +244,24 @@ const Cart = () => {
             <S.Btn>
               <button
                 onClick={() => {
-                  setEtapaAtual(2)
+                  setEtapaAtual(3)
                 }}
               >
                 Continuar com o pagamento
               </button>
-              <button type="button">Voltar para o carrinho</button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEtapaAtual(1)
+                }}
+              >
+                Voltar para o carrinho
+              </button>
             </S.Btn>
           </S.Sidebar>
         </S.EntregaContainer>
       )}
-      {etapaAtual === 2 && (
+      {etapaAtual === 3 && (
         <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
           <S.Sidebar>
             <h3>Pagamento - Valor a pagar {formataPreco(getTotalPrice())}</h3>
@@ -334,12 +338,12 @@ const Cart = () => {
                 <button
                   type="submit"
                   onClick={() => {
-                    form.handleSubmit(), setEtapaAtual(3)
+                    form.handleSubmit(), setEtapaAtual(4)
                   }}
                 >
                   Finalizar pagamento
                 </button>
-                <button type="button" onClick={() => setEtapaAtual(1)}>
+                <button type="button" onClick={() => setEtapaAtual(2)}>
                   Voltar para a edição de endereço
                 </button>
               </S.Btn>
@@ -347,7 +351,7 @@ const Cart = () => {
           </S.Sidebar>
         </S.EntregaContainer>
       )}
-      {etapaAtual === 3 && (
+      {etapaAtual === 4 && (
         <S.EntregaContainer className={isOpen ? 'is-open' : ''}>
           <S.Sidebar>
             <S.Finalizado>

@@ -13,13 +13,6 @@ type Props = {
 }
 
 const Card = ({ titulo, tipo, descricao, image, nota, id }: Props) => {
-  const getDescricao = (descricao: string) => {
-    if (descricao.length > 200) {
-      return descricao.slice(0, 200) + '...'
-    }
-    return descricao
-  }
-
   return (
     <Cards>
       <Tags>
@@ -35,7 +28,7 @@ const Card = ({ titulo, tipo, descricao, image, nota, id }: Props) => {
             {nota} <img src={estrela} />
           </h2>
         </Prato>
-        <p>{getDescricao(descricao)}</p>
+        <p>{descricao}</p>
         <BotaoDiv>
           <Botoes to={`restaurante/${id}`}>Saiba Mais</Botoes>
         </BotaoDiv>

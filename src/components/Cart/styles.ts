@@ -127,6 +127,7 @@ export const Botao = styled.button`
   border: none;
   padding: 4px 84px;
   margin: 8px;
+  cursor:pointer;
 }
 `
 
@@ -209,6 +210,7 @@ export const Btn = styled.div`
     text-align: center;
     font-family: Roboto;
     font-size: 14px;
+    cursor: pointer;
   }
 `
 

@@ -8,7 +8,9 @@ export const Header = styled.header`
   height: 186px;
   width: 100%;
 
-
+  h3:hover{
+    cursor:pointer;
+  }
   @media (max-width: ${breakpoints.desktop}) {
     max-width: 100%;
   }

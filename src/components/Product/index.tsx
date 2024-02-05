@@ -18,6 +18,12 @@ const Product = ({ cardapio }: Props) => {
     dispatch(add(cardapio))
     dispatch(open())
   }
+  const getDescricao = (descricao: string) => {
+    if (descricao.length > 120) {
+      return descricao.slice(0, 120) + '...'
+    }
+    return descricao
+  }
 
   return (
     <ul>
@@ -26,7 +32,7 @@ const Product = ({ cardapio }: Props) => {
           <img src={cardapio.foto} />
           <h2>{cardapio.nome}</h2>
           <p>
-            {cardapio.descricao}
+            {getDescricao(cardapio.descricao)}
             <br />
           </p>
           <Button>Adicionar ao carrinho</Button>
