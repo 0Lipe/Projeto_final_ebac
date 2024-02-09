@@ -34,7 +34,7 @@ export const Produto = styled.li`
 `
 export const Button = styled.button`
     color: ${cores.corPrincipal};
-    background-color: ${cores.corDeFundo};
+    background-color: #FFEBD9;
     text-align: center;
     font-family: Roboto;
     font-size: 14px;
@@ -44,6 +44,20 @@ export const Button = styled.button`
     border: none;
     padding: 4px 84px;
     margin: 8px;
+    cursor:pointer;
+  }
+`
+export const Button2 = styled.button`
+    color: ${cores.corPrincipal};
+    background-color: #FFEBD9;
+    text-align: center;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border: none;
+    padding: 4px 84px;
     cursor:pointer;
   }
 `
@@ -80,11 +94,16 @@ export const ModalContent = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    position: relative;
 
     .btn-close {
       width: 16px;
       height: 16px;
       margin-right: 16px;
+      position: absolute;
+      top: -23px;
+      right: -7px;
+  }
     }
 
     h1 {

@@ -1,5 +1,5 @@
 import close from '../../assets/images/close 1.png'
-import { Produto, Modal, Button, ModalContent } from './styles'
+import { Produto, Modal, Button, ModalContent, Button2 } from './styles'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { add, open } from '../../store/reducers/cart'
@@ -56,9 +56,9 @@ const Product = ({ cardapio }: Props) => {
               <br />
               Serve: {cardapio.porcao}
             </p>
-            <Button onClick={addToCart}>
+            <Button2 onClick={addToCart}>
               Adicionar ao carrinho R${formataPreco(cardapio.preco)}{' '}
-            </Button>
+            </Button2>
           </div>
         </ModalContent>
         <div className="overlay"></div>

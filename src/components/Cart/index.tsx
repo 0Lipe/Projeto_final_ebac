@@ -138,7 +138,7 @@ const Cart = () => {
                     </div>
                     <div className="div-content">
                       <h3>{item.nome}</h3>
-                      <h4>R${formataPreco(item.preco)}</h4>
+                      <h4>{formataPreco(item.preco)}</h4>
                     </div>
                     <div className="div-lixeira">
                       <img
@@ -153,7 +153,7 @@ const Cart = () => {
             </ul>
             <div className="div-total">
               <p>Valor total</p>
-              <p>R$ {formataPreco(getTotalPrice())}</p>
+              <p>{formataPreco(getTotalPrice())}</p>
             </div>
             <S.Botao onClick={() => setEtapaAtual(2)}>
               Continuar com a entrega

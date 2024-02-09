@@ -106,6 +106,11 @@ export const CardCarrinho = styled.div`
 
     h4 {
       margin-left: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      letter-spacing: 0em;
+      text-align: left;
     }
   }
   .div-lixeira {
@@ -117,7 +122,7 @@ export const CardCarrinho = styled.div`
 `
 export const Botao = styled.button`
   color: ${cores.corPrincipal};
-  background-color: ${cores.corDeFundo};
+  background-color: #FFEBD9;
   text-align: center;
   font-family: Roboto;
   font-size: 14px;
