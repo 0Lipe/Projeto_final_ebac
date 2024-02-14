@@ -3,11 +3,12 @@ import Lixeira from '../../assets/images/lixeira-de-reciclagem 1.png'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { usePurchaseMutation } from '../../services/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootReducer } from '../../store'
 import { remove, close } from '../../store/reducers/cart'
 import { formataPreco } from '../ProductList'
+import InputMask from 'react-input-mask'
 
 const Cart = () => {
   const [purchese, { data }] = usePurchaseMutation()
@@ -57,8 +58,8 @@ const Cart = () => {
         .min(5, 'A cidade precisa ter pelo menos 5 caracteres')
         .required('O campo é obrigatório'),
       cep: Yup.string()
-        .min(6, 'O CEP precisa ter pelo menos 14 caracteres')
-        .max(99999999, 'O CEP pode ter no máximo 15 caracteres')
+        .min(9, 'O CEP precisa ter exatamente 9 caracteres')
+        .max(9, 'O CEP precisa ter exatamente 9 caracteres')
         .required('O campo é obrigatório'),
       numero: Yup.number()
         .min(1, 'O número precisa ter pelo menos 1 caracteres')
@@ -121,6 +122,58 @@ const Cart = () => {
     const hasError = isTouched && isInvalid
 
     return hasError
+  }
+  const [formIsValid, setFormIsValid] = useState(false)
+  const [formIsValid2, setFormIsValid2] = useState(false)
+
+  useEffect(() => {
+    if (
+      form.values.receiver &&
+      form.values.endereco &&
+      form.values.cidade &&
+      form.values.cep &&
+      form.values.numero &&
+      !form.errors.receiver &&
+      !form.errors.endereco &&
+      !form.errors.cidade &&
+      !form.errors.cep &&
+      !form.errors.numero
+    ) {
+      setFormIsValid(true)
+    } else {
+      setFormIsValid(false)
+    }
+  }, [form.values, form.errors])
+
+  const goToNextStep = (v: number) => {
+    if (formIsValid) {
+      setEtapaAtual(v)
+    }
+  }
+
+  useEffect(() => {
+    if (
+      form.values.nomeNoCartao &&
+      form.values.numeroNoCartao &&
+      form.values.cvv &&
+      form.values.mes &&
+      form.values.ano &&
+      !form.errors.nomeNoCartao &&
+      !form.errors.numeroNoCartao &&
+      !form.errors.cvv &&
+      !form.errors.mes &&
+      !form.errors.ano
+    ) {
+      setFormIsValid2(true)
+    } else {
+      setFormIsValid2(false)
+    }
+  }, [form.values, form.errors])
+
+  const goToNextStep3 = (v: number) => {
+    if (formIsValid2) {
+      setEtapaAtual(v)
+    }
   }
 
   return (
@@ -206,20 +259,20 @@ const Cart = () => {
               <div className="div-cep-numero">
                 <div>
                   <label htmlFor="cep">CEP</label>
-                  <input
+                  <InputMask
                     id="cep"
                     type="text"
-                    inputMode="none"
                     name="cep"
                     value={form.values.cep}
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     className={checkInputHasError('cep') ? 'error' : ''}
+                    mask="99999-999"
                   />
                 </div>
                 <div>
                   <label htmlFor="numero">Numero</label>
-                  <input
+                  <InputMask
                     id="numero"
                     type="text"
                     name="numero"
@@ -227,6 +280,7 @@ const Cart = () => {
                     onChange={form.handleChange}
                     onBlur={form.handleBlur}
                     className={checkInputHasError('numero') ? 'error' : ''}
+                    mask="99"
                   />
                 </div>
               </div>
@@ -244,7 +298,7 @@ const Cart = () => {
             <S.Btn>
               <button
                 onClick={() => {
-                  setEtapaAtual(3)
+                  goToNextStep(3)
                 }}
               >
                 Continuar com o pagamento
@@ -282,7 +336,7 @@ const Cart = () => {
                 <div className="div-numero-cvv">
                   <div className="numero">
                     <label htmlFor="numeroNoCartao">Numero do cartão</label>
-                    <input
+                    <InputMask
                       id="numero-no-cartao"
                       type="text"
                       name="numeroNoCartao"
@@ -292,11 +346,12 @@ const Cart = () => {
                       className={
                         checkInputHasError('numero-no-cartao') ? 'error' : ''
                       }
+                      mask="9999 9999 9999 9999"
                     />
                   </div>
                   <div className="cvv">
                     <label htmlFor="cvv">CVV</label>
-                    <input
+                    <InputMask
                       id="cvv"
                       type="text"
                       name="cvv"
@@ -304,13 +359,14 @@ const Cart = () => {
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                       className={checkInputHasError('cvv') ? 'error' : ''}
+                      mask="999"
                     />
                   </div>
                 </div>
                 <div className="div-mes-ano">
                   <div className="mes">
                     <label htmlFor="mes">Mês de vencimento</label>
-                    <input
+                    <InputMask
                       type="text"
                       id="mes"
                       name="mes"
@@ -318,11 +374,12 @@ const Cart = () => {
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                       className={checkInputHasError('mes') ? 'error' : ''}
+                      mask="99"
                     />
                   </div>
                   <div className="ano">
                     <label htmlFor="ano">Ano de vencimento</label>
-                    <input
+                    <InputMask
                       type="text"
                       id="ano"
                       name="ano"
@@ -330,6 +387,7 @@ const Cart = () => {
                       onChange={form.handleChange}
                       onBlur={form.handleBlur}
                       className={checkInputHasError('ano') ? 'error' : ''}
+                      mask="9999"
                     />
                   </div>
                 </div>
@@ -338,7 +396,7 @@ const Cart = () => {
                 <button
                   type="submit"
                   onClick={() => {
-                    form.handleSubmit(), setEtapaAtual(4)
+                    form.handleSubmit(), goToNextStep3(4)
                   }}
                 >
                   Finalizar pagamento
