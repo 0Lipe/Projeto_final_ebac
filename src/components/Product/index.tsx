@@ -57,7 +57,7 @@ const Product = ({ cardapio }: Props) => {
               Serve: {cardapio.porcao}
             </p>
             <Button2 onClick={addToCart}>
-              Adicionar ao carrinho R${formataPreco(cardapio.preco)}{' '}
+              Adicionar ao carrinho {formataPreco(cardapio.preco)}{' '}
             </Button2>
           </div>
         </ModalContent>
